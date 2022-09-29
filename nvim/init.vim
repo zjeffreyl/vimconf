@@ -1,8 +1,8 @@
-" ----------------------------------------------------------------------------
-" Plugins 
-" ----------------------------------------------------------------------------
 call plug#begin()
+
+Plug 'sainnhe/everforest'
 Plug 'arcticicestudio/nord-vim'
+Plug 'norcalli/nvim-colorizer.lua'
 Plug 'preservim/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
@@ -13,10 +13,14 @@ Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
 call plug#end()
 
-" ----------------------------------------------------------------------------
-" Theming 
-" ----------------------------------------------------------------------------
-colorscheme nord
+if has('termguicolors')
+    set termguicolors
+endif
+set background=dark
+let g:everforest_background='medium'
+let g:everforest_better_performance = 1
+let g:everforest_background_opacity = 0.5
+colorscheme everforest
 
 " ----------------------------------------------------------------------------
 " Plugin options 
