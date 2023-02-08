@@ -2,6 +2,7 @@ call plug#begin()
 
 Plug 'sainnhe/everforest'
 Plug 'arcticicestudio/nord-vim'
+Plug 'arzg/vim-colors-xcode'
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'preservim/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
@@ -16,11 +17,13 @@ call plug#end()
 if has('termguicolors')
     set termguicolors
 endif
-set background=dark
-let g:everforest_background='medium'
-let g:everforest_better_performance = 1
-let g:everforest_background_opacity = 0.5
-colorscheme everforest
+"set background=dark
+"let g:everforest_background='medium'
+"let g:everforest_better_performance = 1
+"let g:everforest_background_opacity = 0.5
+"colorscheme everforest
+let g:xcodedark_green_comments = 1
+colorscheme xcodedark
 
 " ----------------------------------------------------------------------------
 " Plugin options 
@@ -104,6 +107,13 @@ set wildmenu
 set wildmode=longest:full,full
 set list
 set omnifunc=phpcomplete#CompletePHP
+set foldmethod=indent
+
+augroup remember_folds
+  autocmd!
+  autocmd BufWinLeave * mkview
+  autocmd BufWinEnter * silent! loadview
+augroup END
 
 " ----------------------------------------------------------------------------
 " Key Mappings
