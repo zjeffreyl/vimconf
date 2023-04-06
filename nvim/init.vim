@@ -3,6 +3,7 @@ call plug#begin()
 Plug 'sainnhe/everforest'
 Plug 'arcticicestudio/nord-vim'
 Plug 'arzg/vim-colors-xcode'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'norcalli/nvim-colorizer.lua'
 Plug 'preservim/nerdcommenter'
 Plug 'ryanoasis/vim-devicons'
@@ -12,6 +13,13 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Shougo/denite.nvim'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+Plug 'tpope/vim-sleuth'
+Plug 'ntpeters/vim-better-whitespace'
+Plug 'neovim/nvim-lspconfig'
+Plug 'SmiteshP/nvim-navic'
+Plug 'MunifTanjim/nui.nvim'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'SmiteshP/nvim-navbuddy'
 call plug#end()
 
 if has('termguicolors')
@@ -23,7 +31,9 @@ endif
 "let g:everforest_background_opacity = 0.5
 "colorscheme everforest
 let g:xcodedark_green_comments = 1
-colorscheme xcodedark
+"colorscheme xcodedark
+colorscheme tokyonight-storm
+
 
 " ----------------------------------------------------------------------------
 " Plugin options 
@@ -98,8 +108,8 @@ call s:profile(s:denite_options)
 " ----------------------------------------------------------------------------
 " General settings
 " ----------------------------------------------------------------------------
-set expandtab
-set shiftwidth=4
+"set expandtab
+"set shiftwidth=4
 set ignorecase
 set hidden
 set number
