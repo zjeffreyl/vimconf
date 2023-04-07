@@ -123,6 +123,7 @@ set wildmode=longest:full,full
 set list
 set omnifunc=phpcomplete#CompletePHP
 set foldmethod=indent
+set fillchars+=vert:\
 
 augroup remember_folds
   autocmd!
