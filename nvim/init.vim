@@ -5,14 +5,19 @@ Plug 'arcticicestudio/nord-vim'
 Plug 'arzg/vim-colors-xcode'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'norcalli/nvim-colorizer.lua'
+Plug 'Mofiqul/dracula.nvim'
 Plug 'preservim/nerdcommenter'
-Plug 'ryanoasis/vim-devicons'
 Plug 'scrooloose/nerdtree'
 Plug 'ncm2/ncm2-bufword'
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Shougo/denite.nvim'
 Plug 'roxma/nvim-yarp'
 Plug 'roxma/vim-hug-neovim-rpc'
+"Status Line
+Plug 'nvim-lualine/lualine.nvim'
+Plug 'nvim-tree/nvim-web-devicons'
+Plug 'ryanoasis/vim-devicons'
+
 Plug 'tpope/vim-sleuth'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'neovim/nvim-lspconfig'
@@ -31,12 +36,12 @@ endif
 "let g:everforest_background_opacity = 0.5
 "colorscheme everforest
 let g:xcodedark_green_comments = 1
-"colorscheme xcodedark
-colorscheme tokyonight-storm
+colorscheme dracula
+"colorscheme tokyonight-storm
 
 
 " ----------------------------------------------------------------------------
-" Plugin options 
+" Plugin options
 " ----------------------------------------------------------------------------
 " === Denite setup ==="
 " Use ripgrep for searching current directory for files
@@ -207,3 +212,7 @@ function! s:denite_my_settings() abort
   \ denite#do_map('do_action', 'split')
 endfunction
 
+" Status line
+lua << END
+require('lualine').setup()
+END
