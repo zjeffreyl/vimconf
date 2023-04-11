@@ -88,5 +88,5 @@ nnoremap <silent> gd <cmd>lua vim.lsp.buf.definition()<CR>
 
 " Status line
 lua << END
-require('lualine').setup()
+require('config')
 END
