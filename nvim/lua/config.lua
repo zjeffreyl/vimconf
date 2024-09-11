@@ -1,7 +1,108 @@
-require('lualine').setup()
+require('lualine').setup({
+    options = {
+        theme = 'terafox'
+    }
+})
+
+require('oil').setup({
+  vim.keymap.set("n", "-", "<CMD>Oil<CR>", { desc = "Open parent directory"})
+})
+
+-- Telescope
+require('telescope').setup{
+  file_ignore_patterns = {"docs", "docs/*", "*swagger-ui*"},
+  defaults = {path_display={"truncate"}}
+}
+
+-- Set up nvim-cmp.
+local cmp = require'cmp'
+
+cmp.setup({
+  snippet = {
+    -- REQUIRED - you must specify a snippet engine
+    expand = function(args)
+      vim.fn["vsnip#anonymous"](args.body) -- For `vsnip` users.
+      -- require('luasnip').lsp_expand(args.body) -- For `luasnip` users.
+      -- require('snippy').expand_snippet(args.body) -- For `snippy` users.
+      -- vim.fn["UltiSnips#Anon"](args.body) -- For `ultisnips` users.
+      -- vim.snippet.expand(args.body) -- For native neovim snippets (Neovim v0.10+)
+    end,
+  },
+  window = {
+    completion = {
+      border = "rounded",
+      winhighlight = "Normal:CmpNormal",
+    },
+    documentation = {
+      border = "rounded",
+      winhighlight = "Normal:CmpNormal",
+    }
+  },
+  mapping = cmp.mapping.preset.insert({
+    ['<C-b>'] = cmp.mapping.scroll_docs(-4),
+    ['<C-f>'] = cmp.mapping.scroll_docs(4),
+    ['<C-Space>'] = cmp.mapping.complete(),
+    ['<C-e>'] = cmp.mapping.abort(),
+    ['<CR>'] = cmp.mapping.confirm({ select = true }), -- Accept currently selected item. Set `select` to `false` to only confirm explicitly selected items.
+  }),
+  sources = cmp.config.sources({
+    { name = 'nvim_lsp' },
+    { name = 'vsnip' }, -- For vsnip users.
+    { name = 'buffer' },
+    { name = 'luasnip' }, -- For luasnip users.
+    { name = 'path' },
+    { name = 'vim-dadbod-completion' }
+    -- { name = 'ultisnips' }, -- For ultisnips users.
+    -- { name = 'snippy' }, -- For snippy users.
+  }, {
+    { name = 'buffer' },
+  })
+})
+
+-- To use git you need to install the plugin petertriho/cmp-git and uncomment lines below
+-- Set configuration for specific filetype.
+--[[ cmp.setup.filetype('gitcommit', {
+  sources = cmp.config.sources({
+    { name = 'git' },
+  }, {
+    { name = 'buffer' },
+  })
+)
+equire("cmp_git").setup() ]]--
+
+-- Use buffer source for `/` and `?` (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline({ '/', '?' }, {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = {
+    { name = 'buffer' }
+  }
+})
+
+-- Use cmdline & path source for ':' (if you enabled `native_menu`, this won't work anymore).
+cmp.setup.cmdline(':', {
+  mapping = cmp.mapping.preset.cmdline(),
+  sources = cmp.config.sources({
+    { name = 'path' }
+  }, {
+    { name = 'cmdline' }
+  }),
+  matching = { disallow_symbol_nonprefix_matching = false }
+})
+
+cmp.setup.filetype({"sql"}, {
+  sources = {
+    { name = "vim-dadbod-completion" },
+    { name = "buffer" }
+  }
+})
+
+-- Set up lspconfig.
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
 -- LSP Setup
+vim.diagnostic.open_float()
 local lspconfig = require('lspconfig')
+local config = require('lspconfig.configs')
 local navbuddy = require("nvim-navbuddy")
 lspconfig.phpactor.setup {
     on_attach = function(client, bufnr)
@@ -11,131 +112,5 @@ lspconfig.phpactor.setup {
     end,
 }
 
--- Navbuddy Setup
-local actions = require("nvim-navbuddy.actions")
-
-navbuddy.setup {
-    window = {
-        border = "single",  -- "rounded", "double", "solid", "none"
-                            -- or an array with eight chars building up the border in a clockwise fashion
-                            -- starting with the top-left corner. eg: { "╔", "═" ,"╗", "║", "╝", "═", "╚", "║" }.
-        size = "60%",       -- Or table format example: { height = "40%", width = "100%"}
-        position = "50%",   -- Or table format example: { row = "100%", col = "0%"}
-        scrolloff = nil,    -- scrolloff value within navbuddy window
-        sections = {
-            left = {
-                size = "20%",
-                border = nil, -- You can set border style for each section individually as well.
-            },
-            mid = {
-                size = "40%",
-                border = nil,
-            },
-            right = {
-                -- No size option for right most section. It fills to
-                -- remaining area.
-                border = nil,
-                preview = "leaf",  -- Right section can show previews too.
-                                   -- Options: "leaf", "always" or "never"
-            }
-        },
-    },
-    node_markers = {
-        enabled = true,
-        icons = {
-            leaf = "  ",
-            leaf_selected = " → ",
-            branch = " ",
-        },
-    },
-    icons = {
-        File          = " ",
-        Module        = " ",
-        Namespace     = " ",
-        Package       = " ",
-        Class         = " ",
-        Method        = " ",
-        Property      = " ",
-        Field         = " ",
-        Constructor   = " ",
-        Enum          = "練",
-        Interface     = "練",
-        Function      = " ",
-        Variable      = " ",
-        Constant      = " ",
-        String        = " ",
-        Number        = " ",
-        Boolean       = "◩ ",
-        Array         = " ",
-        Object        = " ",
-        Key           = " ",
-        Null          = "ﳠ ",
-        EnumMember    = " ",
-        Struct        = " ",
-        Event         = " ",
-        Operator      = " ",
-        TypeParameter = " ",
-    },
-    use_default_mappings = true,          -- If set to false, only mappings set
-                                          -- by user are set. Else default
-                                          -- mappings are used for keys
-                                          -- that are not set by user
-    mappings = {
-        ["<esc>"] = actions.close,        -- Close and cursor to original location
-        ["q"] = actions.close,
-
-        ["j"] = actions.next_sibling,     -- down
-        ["k"] = actions.previous_sibling, -- up
-
-        ["h"] = actions.parent,           -- Move to left panel
-        ["l"] = actions.children,         -- Move to right panel
-        ["0"] = actions.root,             -- Move to first panel
-
-        ["v"] = actions.visual_name,      -- Visual selection of name
-        ["V"] = actions.visual_scope,     -- Visual selection of scope
-
-        ["y"] = actions.yank_name,        -- Yank the name to system clipboard "+
-        ["Y"] = actions.yank_scope,       -- Yank the scope to system clipboard "+
-
-        ["i"] = actions.insert_name,      -- Insert at start of name
-        ["I"] = actions.insert_scope,     -- Insert at start of scope
-
-        ["a"] = actions.append_name,      -- Insert at end of name
-        ["A"] = actions.append_scope,     -- Insert at end of scope
-
-        ["r"] = actions.rename,           -- Rename currently focused symbol
-
-        ["d"] = actions.delete,           -- Delete scope
-
-        ["f"] = actions.fold_create,      -- Create fold of current scope
-        ["F"] = actions.fold_delete,      -- Delete fold of current scope
-
-        ["c"] = actions.comment,          -- Comment out current scope
-
-        ["<enter>"] = actions.select,     -- Goto selected symbol
-        ["o"] = actions.select,
-
-        ["J"] = actions.move_down,        -- Move focused node down
-        ["K"] = actions.move_up,          -- Move focused node up
-
-        ["t"] = actions.telescope({       -- Fuzzy finder at current level.
-            layout_config = {             -- All options that can be
-                height = 0.60,            -- passed to telescope.nvim's
-                width = 0.60,             -- default can be passed here.
-                prompt_position = "top",
-                preview_width = 0.50
-            },
-            layout_strategy = "horizontal"
-        })
-    },
-    lsp = {
-        auto_attach = false,   -- If set to true, you don't need to manually use attach function
-        preference = nil,      -- list of lsp server names in order of preference
-    },
-    source_buffer = {
-        follow_node = true,    -- Keep the current node in focus on the source buffer
-        highlight = true,      -- Highlight the currently focused node
-        reorient = "smart",    -- "smart", "top", "mid" or "none"
-        scrolloff = nil        -- scrolloff value when navbuddy is open
-    }
-}
+vim.o.list = true
+vim.o.listchars = "tab:· ,extends:›,precedes:‹,nbsp:·,trail:·"
