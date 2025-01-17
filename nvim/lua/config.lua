@@ -1,6 +1,43 @@
 require('lualine').setup({
     options = {
-        theme = 'terafox'
+        theme = 'auto'
+    },
+    sections = {
+        lualine_x = {},
+    }
+})
+
+require("catppuccin").setup({
+  transparent_background=true
+})
+
+require('gitsigns').setup({
+    vim.keymap.set("n", "<leader>gp", ":Gitsigns preview_hunk<CR>"),
+})
+
+require('neoscroll').setup({
+  mappings = {                 -- Keys to be mapped to their corresponding default scrolling animation
+    '<C-u>', '<C-d>',
+    '<C-b>', '<C-f>',
+    '<C-y>', '<C-e>',
+    'zt', 'zz', 'zb',
+  },
+  hide_cursor = true,          -- Hide cursor while scrolling
+  stop_eof = true,             -- Stop at <EOF> when scrolling downwards
+  respect_scrolloff = false,   -- Stop scrolling when the cursor reaches the scrolloff margin of the file
+  cursor_scrolls_alone = true, -- The cursor will keep on scrolling even if the window cannot scroll further
+  easing = 'quadratic',           -- Default easing function
+  pre_hook = nil,              -- Function to run before the scrolling animation starts
+  post_hook = nil,             -- Function to run after the scrolling animation ends
+  performance_mode = false,    -- Disable "Performance Mode" on all buffers.
+  ignored_events = {           -- Events ignored while scrolling
+      'WinScrolled', 'CursorMoved'
+  }
+})
+
+require('render-markdown').setup({
+    link = {
+      enabled = true
     }
 })
 
@@ -9,10 +46,12 @@ require('oil').setup({
 })
 
 -- Telescope
-require('telescope').setup{
-  file_ignore_patterns = {"docs", "docs/*", "*swagger-ui*"},
-  defaults = {path_display={"truncate"}}
-}
+require('telescope').setup({
+  defaults = {
+    path_display={"truncate"},
+    file_ignore_patterns = {"*swagger-ui*", "docs/swagger%-ui/", "**swagger-ui-bundle**"},
+  },
+})
 
 -- Set up nvim-cmp.
 local cmp = require'cmp'
@@ -104,12 +143,29 @@ vim.diagnostic.open_float()
 local lspconfig = require('lspconfig')
 local config = require('lspconfig.configs')
 local navbuddy = require("nvim-navbuddy")
+
 lspconfig.phpactor.setup {
     on_attach = function(client, bufnr)
         navbuddy.attach(client, bufnr)
         vim.keymap.set("n", "K", vim.lsp.buf.hover, { buffer = 0 })
         vim.keymap.set("n", "gd", vim.lsp.buf.definition, { buffer = 0 })
     end,
+}
+
+config.blade = {
+    default_config = {
+    -- Path to the executable: laravel-dev-generators
+    cmd = { "/usr/local/bin/laravel-dev-generators", "lsp" },
+    filetypes = {'blade'};
+    root_dir = function(fname)
+      return lspconfig.util.find_git_ancestor(fname)
+    end;
+    settings = {};
+  };
+}
+
+lspconfig.blade.setup {
+  capabilities = capabilities
 }
 
 vim.o.list = true

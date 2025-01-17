@@ -32,6 +32,6 @@ tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{title
 active_tab_font_style bold
 
 # BEGIN_KITTY_THEME
-# Base2Tone Motel Dark
+# Atelier Plateau Dark
 include current-theme.conf
 # END_KITTY_THEME

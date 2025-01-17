@@ -1,10 +1,14 @@
 call plug#begin()
 
 "Theme Plugins
+Plug 'folke/tokyonight.nvim'
 Plug 'EdenEast/nightfox.nvim'
 Plug 'pineapplegiant/spaceduck', { 'branch': 'main' }
+Plug 'catppuccin/nvim', { 'as': 'catppuccin' }
+Plug 'craftzdog/solarized-osaka.nvim'
 Plug 'andreypopp/vim-colors-plain'
 Plug 'rockerBOO/boo-colorscheme-nvim'
+Plug 'olivercederborg/poimandres.nvim'
 
 Plug 'goolord/alpha-nvim'
 Plug 'preservim/nerdcommenter'
@@ -20,9 +24,16 @@ Plug 'nvim-tree/nvim-web-devicons'
 
 "Formatting
 Plug 'tpope/vim-sleuth'
-Plug 'tpope/vim-fugitive'
 Plug 'ntpeters/vim-better-whitespace'
 Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'MeanderingProgrammer/render-markdown.nvim'
+Plug 'jwalton512/vim-blade'
+
+"GIT
+Plug 'tpope/vim-fugitive'
+Plug 'isakbm/gitgraph.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'sindrets/diffview.nvim'
 
 "Editor Plugins
 "nvim cmp
@@ -43,7 +54,7 @@ Plug 'tpope/vim-dadbod'
 Plug 'kristijanhusak/vim-dadbod-ui'
 
 Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.4' }
 Plug 'SmiteshP/nvim-navic'
 Plug 'MunifTanjim/nui.nvim'
 Plug 'SmiteshP/nvim-navbuddy'
@@ -51,6 +62,8 @@ Plug 'HampusHauffman/block.nvim'
 Plug 'APZelos/blamer.nvim'
 Plug 'mfussenegger/nvim-dap'
 Plug 'phpactor/phpactor', {'for': 'php', 'do': 'composer install'}
+
+Plug 'karb94/neoscroll.nvim'
 call plug#end()
 
 " ----------------------------------------------------------------------------
@@ -76,8 +89,6 @@ dashboard.section.header.val = {
 }
 
 -- Set menu
-
-
 dashboard.section.buttons.val = {
     dashboard.button( "e", "  > New file" , ":ene <BAR> startinsert <CR>"),
     dashboard.button( "f", "⌕  > Find file", ":cd $HOME/projects/sandbox| Telescope find_files<CR>"),
@@ -85,11 +96,45 @@ dashboard.section.buttons.val = {
     dashboard.button( "s", "  > Settings" , ":e $MYVIMRC | :cd %:p:h | split . | wincmd k | pwd<CR>"),
     dashboard.button( "q", "   > Quit NVIM", ":qa<CR>"),
 }
+
+vim.opt.spelllang = 'en_us'
+vim.opt.spell = true
+
 require'alpha'.setup(dashboard.opts)
+require'poimandres'.setup { disable_background = true }
+
+require'gitgraph'.setup {
+    opts = {
+      symbols = {
+        merge_commit = 'M',
+        commit = '*',
+      },
+      format = {
+        timestamp = '%H:%M:%S %d-%m-%Y',
+        fields = { 'hash', 'timestamp', 'author', 'branch_name', 'tag' },
+      },
+      hooks = {
+        on_select_commit = function(commit)
+          print('selected commit:', commit.hash)
+        end,
+        on_select_range_commit = function(from, to)
+          print('selected range:', from.hash, to.hash)
+        end,
+      },
+    },
+    keys = {
+      {
+        "<leader>gl",
+        function()
+          require('gitgraph').draw({}, { all = true, max_count = 5000 })
+        end,
+        desc = "GitGraph - Draw",
+      },
+    },
+}
 EOF
 
 set background=dark
-colorscheme plain
 set termguicolors
 
 autocmd VimEnter * Alpha
